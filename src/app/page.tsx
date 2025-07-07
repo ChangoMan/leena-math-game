@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import Image from 'next/image'
+import { useCallback, useEffect, useState } from 'react'
 
 export default function Home() {
   const [num1, setNum1] = useState<number>(0)
@@ -11,7 +12,7 @@ export default function Home() {
   const [backgroundColor, setBackgroundColor] = useState<string>('bg-gray-800')
 
   // Generate random numbers between 0 and 10
-  const generateNewProblem = () => {
+  const generateNewProblem = useCallback(() => {
     const n1 = Math.floor(Math.random() * 11)
     const n2 = Math.floor(Math.random() * 11)
 
@@ -27,12 +28,12 @@ export default function Home() {
     setUserAnswer('')
     setFeedback('')
     setBackgroundColor('bg-gray-800')
-  }
+  }, [operation])
 
   // Initialize with a new problem
   useEffect(() => {
     generateNewProblem()
-  }, [])
+  }, [generateNewProblem])
 
   // Toggle between addition and subtraction
   const toggleOperation = () => {
@@ -42,7 +43,7 @@ export default function Home() {
   // Update problem when operation changes
   useEffect(() => {
     generateNewProblem()
-  }, [operation])
+  }, [generateNewProblem])
 
   const checkAnswer = () => {
     const correctAnswer = operation === 'add' ? num1 + num2 : num1 - num2
@@ -117,6 +118,14 @@ export default function Home() {
           </div>
         )}
 
+        <Image
+          className="w-1/2 mx-auto my-12"
+          src="/dada-ping.png"
+          alt="Dada Ping"
+          width={1080}
+          height={1196}
+        />
+
         <div className="mt-12 text-center flex gap-4 items-center justify-center">
           <button
             type="button"
@@ -125,12 +134,12 @@ export default function Home() {
           >
             Switch to {operation === 'add' ? 'Subtraction' : 'Addition'}
           </button>
-          <button
+          {/* <button
             onClick={generateNewProblem}
             className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors cursor-pointer"
           >
             New Problem
-          </button>
+          </button> */}
         </div>
       </div>
     </div>
