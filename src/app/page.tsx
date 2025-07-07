@@ -49,7 +49,8 @@ export default function Home() {
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      handleSubmit(e as any)
+      e.preventDefault();
+      checkAnswer();
     }
   }
 
