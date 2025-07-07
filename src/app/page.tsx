@@ -1,103 +1,109 @@
-import Image from "next/image";
+'use client'
+
+import { useEffect, useState } from 'react'
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [num1, setNum1] = useState<number>(0)
+  const [num2, setNum2] = useState<number>(0)
+  const [userAnswer, setUserAnswer] = useState<string>('')
+  const [feedback, setFeedback] = useState<string>('')
+  const [backgroundColor, setBackgroundColor] = useState<string>('bg-gray-800')
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  // Generate random numbers between 0 and 10
+  const generateNewProblem = () => {
+    setNum1(Math.floor(Math.random() * 11))
+    setNum2(Math.floor(Math.random() * 11))
+    setUserAnswer('')
+    setFeedback('')
+    setBackgroundColor('bg-gray-800')
+  }
+
+  // Initialize with a new problem
+  useEffect(() => {
+    generateNewProblem()
+  }, [])
+
+  const checkAnswer = () => {
+    const correctAnswer = num1 + num2
+    const userNum = parseInt(userAnswer)
+
+    if (userNum === correctAnswer) {
+      setFeedback('Correct! 🎉')
+      setBackgroundColor('bg-green-200')
+      // Generate new problem after 2 seconds
+      setTimeout(() => {
+        generateNewProblem()
+      }, 2000)
+    } else {
+      setFeedback('Try again! ❌')
+      setBackgroundColor('bg-red-200')
+    }
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (userAnswer.trim() !== '') {
+      checkAnswer()
+    }
+  }
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e as any)
+    }
+  }
+
+  return (
+    <div
+      className={`min-h-screen flex items-center justify-center transition-colors duration-500 ${backgroundColor}`}
+    >
+      <div className="bg-gray-700 rounded-lg shadow-lg p-8 max-w-md w-full mx-4">
+        <h1 className="text-3xl font-bold text-center mb-8 text-white">
+          Math Game
+        </h1>
+
+        <div className="text-center mb-6">
+          <div className="text-6xl font-bold text-white mb-4">
+            {num1} + {num2} = ?
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <input
+              type="number"
+              value={userAnswer}
+              onChange={(e) => setUserAnswer(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Enter your answer"
+              className="w-full px-4 py-3 text-2xl text-center border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition-colors font-bold"
+              autoFocus
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg transition-colors text-xl"
+          >
+            Check Answer
+          </button>
+        </form>
+
+        {feedback && (
+          <div className="mt-6 text-center">
+            <p className="text-2xl font-bold text-white">{feedback}</p>
+          </div>
+        )}
+
+        <div className="mt-6 text-center">
+          <button
+            onClick={generateNewProblem}
+            className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors"
+          >
+            New Problem
+          </button>
+        </div>
+      </div>
     </div>
-  );
+  )
 }
